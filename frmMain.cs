@@ -197,6 +197,9 @@ namespace ServiceSearcher
         {
             DataGridViewSelectedRowCollection rows = dataGridView.SelectedRows;
             StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine($"{dataGridView.Columns["clnName"].HeaderText}\t{dataGridView.Columns["clnPath"].HeaderText}\t" +
+                $"{dataGridView.Columns["clnType"].HeaderText}\t{dataGridView.Columns["clnSize"].HeaderText}\t{dataGridView.Columns["clnDateCreated"].HeaderText}\t" +
+                $"{dataGridView.Columns["clnDateModified"].HeaderText}\t{dataGridView.Columns["clnContent"].HeaderText}\t");
 
             foreach (DataGridViewRow row in rows) 
             {
