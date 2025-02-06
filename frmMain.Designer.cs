@@ -44,12 +44,6 @@
             txtFileTypes = new TextBox();
             splitContainer2 = new SplitContainer();
             dgvSearchResults = new DataGridView();
-            cmsMain = new ContextMenuStrip(components);
-            tsmiCopyFileName = new ToolStripMenuItem();
-            tsmiCopyFilePath = new ToolStripMenuItem();
-            tsmiCopyFullFilePath = new ToolStripMenuItem();
-            tsmiCopyRowsToClipboardCommand = new ToolStripMenuItem();
-            rtbContent = new RichTextBox();
             clnName = new DataGridViewLinkColumn();
             clnPath = new DataGridViewLinkColumn();
             clnType = new DataGridViewTextBoxColumn();
@@ -59,6 +53,12 @@
             clnDateModified = new DataGridViewTextBoxColumn();
             clnUrl = new DataGridViewTextBoxColumn();
             clnContent = new DataGridViewTextBoxColumn();
+            cmsMain = new ContextMenuStrip(components);
+            tsmiCopyFileName = new ToolStripMenuItem();
+            tsmiCopyFilePath = new ToolStripMenuItem();
+            tsmiCopyFullFilePath = new ToolStripMenuItem();
+            tsmiCopyRowsToClipboardCommand = new ToolStripMenuItem();
+            rtbContent = new RichTextBox();
             ((System.ComponentModel.ISupportInitialize)bindingSource1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -143,7 +143,7 @@
             txtFileTypes.PlaceholderText = "*.docx,*.doc";
             txtFileTypes.Size = new Size(353, 23);
             txtFileTypes.TabIndex = 7;
-            txtFileTypes.Text = "*.docx,*.doc,*.docm,*.xls,*.xlsx,*.xlsm,*.ppt,*.pptx, *дск.*";
+            txtFileTypes.Text = "*.docx,*.doc,*.docm,*.xls,*.xlsx,*.xlsm,*.ppt,*.pptx, *.pdf, *дск.*";
             // 
             // splitContainer2
             // 
@@ -187,55 +187,6 @@
             dgvSearchResults.Size = new Size(300, 250);
             dgvSearchResults.TabIndex = 15;
             dgvSearchResults.CellContentDoubleClick += dgvSearchResults_CellContentDoubleClick;
-            // 
-            // cmsMain
-            // 
-            cmsMain.Items.AddRange(new ToolStripItem[] { tsmiCopyFileName, tsmiCopyFilePath, tsmiCopyFullFilePath, tsmiCopyRowsToClipboardCommand });
-            cmsMain.Name = "cmsMain";
-            cmsMain.Size = new Size(376, 92);
-            cmsMain.Opening += cmsMain_Opening;
-            // 
-            // tsmiCopyFileName
-            // 
-            tsmiCopyFileName.Name = "tsmiCopyFileName";
-            tsmiCopyFileName.ShortcutKeys = Keys.Control | Keys.D1;
-            tsmiCopyFileName.Size = new Size(375, 22);
-            tsmiCopyFileName.Text = "Копіювати назву файла";
-            // 
-            // tsmiCopyFilePath
-            // 
-            tsmiCopyFilePath.Name = "tsmiCopyFilePath";
-            tsmiCopyFilePath.ShortcutKeyDisplayString = "";
-            tsmiCopyFilePath.ShortcutKeys = Keys.Control | Keys.D2;
-            tsmiCopyFilePath.Size = new Size(375, 22);
-            tsmiCopyFilePath.Text = "Копіювати шлях";
-            // 
-            // tsmiCopyFullFilePath
-            // 
-            tsmiCopyFullFilePath.Name = "tsmiCopyFullFilePath";
-            tsmiCopyFullFilePath.ShortcutKeys = Keys.Control | Keys.D3;
-            tsmiCopyFullFilePath.Size = new Size(375, 22);
-            tsmiCopyFullFilePath.Text = "Копіювати повний шлях файла";
-            // 
-            // tsmiCopyRowsToClipboardCommand
-            // 
-            tsmiCopyRowsToClipboardCommand.Name = "tsmiCopyRowsToClipboardCommand";
-            tsmiCopyRowsToClipboardCommand.ShortcutKeys = Keys.Control | Keys.Shift | Keys.C;
-            tsmiCopyRowsToClipboardCommand.Size = new Size(375, 22);
-            tsmiCopyRowsToClipboardCommand.Text = "Експорт виділених рядків в буфер обміну";
-            // 
-            // rtbContent
-            // 
-            rtbContent.Dock = DockStyle.Fill;
-            rtbContent.Location = new Point(0, 0);
-            rtbContent.Name = "rtbContent";
-            rtbContent.ReadOnly = true;
-            rtbContent.ShowSelectionMargin = true;
-            rtbContent.Size = new Size(168, 250);
-            rtbContent.TabIndex = 15;
-            rtbContent.Text = "";
-            rtbContent.SelectionChanged += rtbContent_SelectionChanged;
-            rtbContent.TextChanged += rtbContent_TextChanged;
             // 
             // clnName
             // 
@@ -325,6 +276,55 @@
             clnContent.Name = "clnContent";
             clnContent.ReadOnly = true;
             clnContent.Visible = false;
+            // 
+            // cmsMain
+            // 
+            cmsMain.Items.AddRange(new ToolStripItem[] { tsmiCopyFileName, tsmiCopyFilePath, tsmiCopyFullFilePath, tsmiCopyRowsToClipboardCommand });
+            cmsMain.Name = "cmsMain";
+            cmsMain.Size = new Size(376, 92);
+            cmsMain.Opening += cmsMain_Opening;
+            // 
+            // tsmiCopyFileName
+            // 
+            tsmiCopyFileName.Name = "tsmiCopyFileName";
+            tsmiCopyFileName.ShortcutKeys = Keys.Control | Keys.D1;
+            tsmiCopyFileName.Size = new Size(375, 22);
+            tsmiCopyFileName.Text = "Копіювати назву файла";
+            // 
+            // tsmiCopyFilePath
+            // 
+            tsmiCopyFilePath.Name = "tsmiCopyFilePath";
+            tsmiCopyFilePath.ShortcutKeyDisplayString = "";
+            tsmiCopyFilePath.ShortcutKeys = Keys.Control | Keys.D2;
+            tsmiCopyFilePath.Size = new Size(375, 22);
+            tsmiCopyFilePath.Text = "Копіювати шлях";
+            // 
+            // tsmiCopyFullFilePath
+            // 
+            tsmiCopyFullFilePath.Name = "tsmiCopyFullFilePath";
+            tsmiCopyFullFilePath.ShortcutKeys = Keys.Control | Keys.D3;
+            tsmiCopyFullFilePath.Size = new Size(375, 22);
+            tsmiCopyFullFilePath.Text = "Копіювати повний шлях файла";
+            // 
+            // tsmiCopyRowsToClipboardCommand
+            // 
+            tsmiCopyRowsToClipboardCommand.Name = "tsmiCopyRowsToClipboardCommand";
+            tsmiCopyRowsToClipboardCommand.ShortcutKeys = Keys.Control | Keys.Shift | Keys.C;
+            tsmiCopyRowsToClipboardCommand.Size = new Size(375, 22);
+            tsmiCopyRowsToClipboardCommand.Text = "Експорт виділених рядків в буфер обміну";
+            // 
+            // rtbContent
+            // 
+            rtbContent.Dock = DockStyle.Fill;
+            rtbContent.Location = new Point(0, 0);
+            rtbContent.Name = "rtbContent";
+            rtbContent.ReadOnly = true;
+            rtbContent.ShowSelectionMargin = true;
+            rtbContent.Size = new Size(168, 250);
+            rtbContent.TabIndex = 15;
+            rtbContent.Text = "";
+            rtbContent.SelectionChanged += rtbContent_SelectionChanged;
+            rtbContent.TextChanged += rtbContent_TextChanged;
             // 
             // frmMain
             // 
