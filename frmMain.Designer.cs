@@ -59,6 +59,8 @@
             tsmiCopyFullFilePath = new ToolStripMenuItem();
             tsmiCopyRowsToClipboardCommand = new ToolStripMenuItem();
             rtbContent = new RichTextBox();
+            statusStrip1 = new StatusStrip();
+            tsslTotalFound = new ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)bindingSource1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -70,6 +72,7 @@
             splitContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvSearchResults).BeginInit();
             cmsMain.SuspendLayout();
+            statusStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // splitContainer1
@@ -93,7 +96,7 @@
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(splitContainer2);
-            splitContainer1.Size = new Size(472, 349);
+            splitContainer1.Size = new Size(472, 327);
             splitContainer1.SplitterDistance = 95;
             splitContainer1.TabIndex = 8;
             // 
@@ -158,7 +161,7 @@
             // splitContainer2.Panel2
             // 
             splitContainer2.Panel2.Controls.Add(rtbContent);
-            splitContainer2.Size = new Size(472, 250);
+            splitContainer2.Size = new Size(472, 228);
             splitContainer2.SplitterDistance = 300;
             splitContainer2.TabIndex = 0;
             // 
@@ -177,16 +180,20 @@
             dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
             dgvSearchResults.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            dgvSearchResults.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvSearchResults.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dgvSearchResults.Columns.AddRange(new DataGridViewColumn[] { clnName, clnPath, clnType, clnSize, clnHits, clnDateCreated, clnDateModified, clnUrl, clnContent });
             dgvSearchResults.ContextMenuStrip = cmsMain;
             dgvSearchResults.Dock = DockStyle.Fill;
             dgvSearchResults.Location = new Point(0, 0);
             dgvSearchResults.Name = "dgvSearchResults";
             dgvSearchResults.ReadOnly = true;
-            dgvSearchResults.Size = new Size(300, 250);
+            dgvSearchResults.RowHeadersWidth = 25;
+            dgvSearchResults.RowTemplate.Height = 18;
+            dgvSearchResults.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvSearchResults.Size = new Size(300, 228);
             dgvSearchResults.TabIndex = 15;
             dgvSearchResults.CellContentDoubleClick += dgvSearchResults_CellContentDoubleClick;
+            dgvSearchResults.ColumnHeaderMouseClick += dgvSearchResults_ColumnHeaderMouseClick;
             // 
             // clnName
             // 
@@ -200,7 +207,6 @@
             // 
             // clnPath
             // 
-            clnPath.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             clnPath.DataPropertyName = "Path";
             clnPath.HeaderText = "Шлях";
             clnPath.MinimumWidth = 150;
@@ -208,6 +214,7 @@
             clnPath.ReadOnly = true;
             clnPath.Resizable = DataGridViewTriState.True;
             clnPath.SortMode = DataGridViewColumnSortMode.Automatic;
+            clnPath.Width = 250;
             // 
             // clnType
             // 
@@ -320,11 +327,27 @@
             rtbContent.Name = "rtbContent";
             rtbContent.ReadOnly = true;
             rtbContent.ShowSelectionMargin = true;
-            rtbContent.Size = new Size(168, 250);
+            rtbContent.Size = new Size(168, 228);
             rtbContent.TabIndex = 15;
             rtbContent.Text = "";
             rtbContent.SelectionChanged += rtbContent_SelectionChanged;
             rtbContent.TextChanged += rtbContent_TextChanged;
+            // 
+            // statusStrip1
+            // 
+            statusStrip1.Items.AddRange(new ToolStripItem[] { tsslTotalFound });
+            statusStrip1.Location = new Point(6, 333);
+            statusStrip1.Name = "statusStrip1";
+            statusStrip1.Size = new Size(472, 22);
+            statusStrip1.TabIndex = 17;
+            statusStrip1.Text = "statusStrip1";
+            // 
+            // tsslTotalFound
+            // 
+            tsslTotalFound.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            tsslTotalFound.Name = "tsslTotalFound";
+            tsslTotalFound.Size = new Size(161, 17);
+            tsslTotalFound.Text = "Всього знайдено файлів: 0";
             // 
             // frmMain
             // 
@@ -332,11 +355,12 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(484, 361);
             Controls.Add(splitContainer1);
+            Controls.Add(statusStrip1);
             Icon = (Icon)resources.GetObject("$this.Icon");
             MinimumSize = new Size(400, 350);
             Name = "frmMain";
             Padding = new Padding(6);
-            Text = "ASearch";
+            Text = "Service Searcher";
             ((System.ComponentModel.ISupportInitialize)bindingSource1).EndInit();
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel1.PerformLayout();
@@ -349,7 +373,10 @@
             splitContainer2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvSearchResults).EndInit();
             cmsMain.ResumeLayout(false);
+            statusStrip1.ResumeLayout(false);
+            statusStrip1.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -368,6 +395,8 @@
         private ToolStripMenuItem tsmiCopyFilePath;
         private ToolStripMenuItem tsmiCopyFullFilePath;
         private ToolStripMenuItem tsmiCopyRowsToClipboardCommand;
+        private StatusStrip statusStrip1;
+        private ToolStripStatusLabel tsslTotalFound;
         private DataGridViewLinkColumn clnName;
         private DataGridViewLinkColumn clnPath;
         private DataGridViewTextBoxColumn clnType;

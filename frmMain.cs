@@ -1,18 +1,14 @@
-using Microsoft.Search.Interop;
-using System.Data;
-using System.Data.OleDb;
 using System.Diagnostics;
-using System.Drawing;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Input;
 
 namespace ServiceSearcher
 {
     public partial class frmMain : Form
     {
-        MatchCollection searchItems;
+        MatchCollection searchQueryItems;
         CommandManager commandManager = new CommandManager();
+        SearchItemsList searchItems = new SearchItemsList();
 
         public frmMain()
         {
@@ -34,12 +30,15 @@ namespace ServiceSearcher
 
         private void button2_Click(object sender, EventArgs e)
         {
-            searchItems = Regex.Matches(tbQuery.Text, "\"(.*?)\"");
+            searchQueryItems = Regex.Matches(tbQuery.Text, "\"(.*?)\"");
             SearchItemsDAO searchItemsDAO = new SearchItemsDAO(txtFileTypes.Text, tbQuery.Text, -1);
-            bindingSource1.DataSource = searchItemsDAO.GetAllSearchItems();
+            searchItems.Clear();
+            searchItems.AddRange(searchItemsDAO.GetAllSearchItems());
+            bindingSource1.DataSource = searchItems;
             dgvSearchResults.DataSource = bindingSource1;
             rtbContent.DataBindings.Clear();
             rtbContent.DataBindings.Add(new Binding("Text", bindingSource1, "Content"));
+            tsslTotalFound.Text = $"Всього знайдено файлів: {searchItems.Count}";
         }
 
         private void dgvSearchResults_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -77,7 +76,7 @@ namespace ServiceSearcher
                 {
                     rtbContent.SuspendLayout();
 
-                    foreach (Match searchItem in searchItems)
+                    foreach (Match searchItem in searchQueryItems)
                     {
                         MatchCollection mColl = Regex.Matches(rtbContent.Text, searchItem.Value.Replace("\"", ""),
                             RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
@@ -115,6 +114,35 @@ namespace ServiceSearcher
         private void cmsMain_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             commandManager.RaiseCanExecuteChanged();
+        }
+
+        private void dgvSearchResults_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            DataGridViewColumn column = dgvSearchResults.Columns[e.ColumnIndex];
+            SortOrder sortOrder = column.HeaderCell.SortGlyphDirection;
+
+            if (sortOrder == SortOrder.None || sortOrder == SortOrder.Descending)
+            {
+                sortOrder = SortOrder.Ascending;
+                searchItems.Sort(column.DataPropertyName);
+            }
+            else
+            {
+                sortOrder = SortOrder.Descending;
+                searchItems.Sort(column.DataPropertyName, false);
+            }
+
+            dgvSearchResults.Refresh();
+
+            foreach (DataGridViewColumn col in dgvSearchResults.Columns)
+            {
+                if (col != column)
+                {
+                    col.HeaderCell.SortGlyphDirection = SortOrder.None;
+                }
+            }
+
+            column.HeaderCell.SortGlyphDirection = sortOrder;
         }
     }
 
