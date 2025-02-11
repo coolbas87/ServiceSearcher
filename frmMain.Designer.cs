@@ -58,9 +58,15 @@
             tsmiCopyFilePath = new ToolStripMenuItem();
             tsmiCopyFullFilePath = new ToolStripMenuItem();
             tsmiCopyRowsToClipboardCommand = new ToolStripMenuItem();
+            textBox1 = new TextBox();
+            tcContent = new TabControl();
+            tpAutoSummary = new TabPage();
             rtbContent = new RichTextBox();
+            tpPreview = new TabPage();
+            previewHandlerHost1 = new PreviewHandlers.PreviewHandlerHost();
             statusStrip1 = new StatusStrip();
             tsslTotalFound = new ToolStripStatusLabel();
+            tPreview = new System.Windows.Forms.Timer(components);
             ((System.ComponentModel.ISupportInitialize)bindingSource1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -72,6 +78,9 @@
             splitContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvSearchResults).BeginInit();
             cmsMain.SuspendLayout();
+            tcContent.SuspendLayout();
+            tpAutoSummary.SuspendLayout();
+            tpPreview.SuspendLayout();
             statusStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -157,10 +166,11 @@
             // splitContainer2.Panel1
             // 
             splitContainer2.Panel1.Controls.Add(dgvSearchResults);
+            splitContainer2.Panel1.Controls.Add(textBox1);
             // 
             // splitContainer2.Panel2
             // 
-            splitContainer2.Panel2.Controls.Add(rtbContent);
+            splitContainer2.Panel2.Controls.Add(tcContent);
             splitContainer2.Size = new Size(472, 228);
             splitContainer2.SplitterDistance = 300;
             splitContainer2.TabIndex = 0;
@@ -171,7 +181,9 @@
             dgvSearchResults.AllowUserToDeleteRows = false;
             dgvSearchResults.AllowUserToOrderColumns = true;
             dgvSearchResults.AllowUserToResizeRows = false;
+            dgvSearchResults.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dgvSearchResults.BackgroundColor = SystemColors.Control;
+            dgvSearchResults.BorderStyle = BorderStyle.Fixed3D;
             dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = SystemColors.Control;
             dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F);
@@ -183,17 +195,17 @@
             dgvSearchResults.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dgvSearchResults.Columns.AddRange(new DataGridViewColumn[] { clnName, clnPath, clnType, clnSize, clnHits, clnDateCreated, clnDateModified, clnUrl, clnContent });
             dgvSearchResults.ContextMenuStrip = cmsMain;
-            dgvSearchResults.Dock = DockStyle.Fill;
-            dgvSearchResults.Location = new Point(0, 0);
+            dgvSearchResults.Location = new Point(0, 27);
             dgvSearchResults.Name = "dgvSearchResults";
             dgvSearchResults.ReadOnly = true;
             dgvSearchResults.RowHeadersWidth = 25;
             dgvSearchResults.RowTemplate.Height = 18;
             dgvSearchResults.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvSearchResults.Size = new Size(300, 228);
-            dgvSearchResults.TabIndex = 15;
+            dgvSearchResults.Size = new Size(300, 201);
+            dgvSearchResults.TabIndex = 29;
             dgvSearchResults.CellContentDoubleClick += dgvSearchResults_CellContentDoubleClick;
             dgvSearchResults.ColumnHeaderMouseClick += dgvSearchResults_ColumnHeaderMouseClick;
+            dgvSearchResults.RowEnter += dgvSearchResults_RowEnter;
             // 
             // clnName
             // 
@@ -320,18 +332,71 @@
             tsmiCopyRowsToClipboardCommand.Size = new Size(375, 22);
             tsmiCopyRowsToClipboardCommand.Text = "Експорт виділених рядків в буфер обміну";
             // 
+            // textBox1
+            // 
+            textBox1.Dock = DockStyle.Top;
+            textBox1.Location = new Point(0, 0);
+            textBox1.Name = "textBox1";
+            textBox1.PlaceholderText = "Пошук";
+            textBox1.Size = new Size(300, 23);
+            textBox1.TabIndex = 28;
+            textBox1.TextChanged += textBox1_TextChanged;
+            // 
+            // tcContent
+            // 
+            tcContent.Controls.Add(tpAutoSummary);
+            tcContent.Controls.Add(tpPreview);
+            tcContent.Dock = DockStyle.Fill;
+            tcContent.Location = new Point(0, 0);
+            tcContent.Name = "tcContent";
+            tcContent.SelectedIndex = 0;
+            tcContent.Size = new Size(168, 228);
+            tcContent.TabIndex = 0;
+            tcContent.Selected += tcContent_Selected;
+            // 
+            // tpAutoSummary
+            // 
+            tpAutoSummary.Controls.Add(rtbContent);
+            tpAutoSummary.Location = new Point(4, 24);
+            tpAutoSummary.Name = "tpAutoSummary";
+            tpAutoSummary.Padding = new Padding(3);
+            tpAutoSummary.Size = new Size(160, 200);
+            tpAutoSummary.TabIndex = 0;
+            tpAutoSummary.Text = "Автозведення";
+            tpAutoSummary.UseVisualStyleBackColor = true;
+            // 
             // rtbContent
             // 
             rtbContent.Dock = DockStyle.Fill;
-            rtbContent.Location = new Point(0, 0);
+            rtbContent.Location = new Point(3, 3);
             rtbContent.Name = "rtbContent";
             rtbContent.ReadOnly = true;
             rtbContent.ShowSelectionMargin = true;
-            rtbContent.Size = new Size(168, 228);
-            rtbContent.TabIndex = 15;
+            rtbContent.Size = new Size(154, 194);
+            rtbContent.TabIndex = 16;
             rtbContent.Text = "";
             rtbContent.SelectionChanged += rtbContent_SelectionChanged;
             rtbContent.TextChanged += rtbContent_TextChanged;
+            // 
+            // tpPreview
+            // 
+            tpPreview.Controls.Add(previewHandlerHost1);
+            tpPreview.Location = new Point(4, 24);
+            tpPreview.Name = "tpPreview";
+            tpPreview.Padding = new Padding(3);
+            tpPreview.Size = new Size(160, 200);
+            tpPreview.TabIndex = 1;
+            tpPreview.Text = "Попередній перегляд";
+            tpPreview.UseVisualStyleBackColor = true;
+            // 
+            // previewHandlerHost1
+            // 
+            previewHandlerHost1.Dock = DockStyle.Fill;
+            previewHandlerHost1.Location = new Point(3, 3);
+            previewHandlerHost1.Name = "previewHandlerHost1";
+            previewHandlerHost1.Size = new Size(154, 194);
+            previewHandlerHost1.TabIndex = 0;
+            previewHandlerHost1.Text = "previewHandlerHost1";
             // 
             // statusStrip1
             // 
@@ -348,6 +413,11 @@
             tsslTotalFound.Name = "tsslTotalFound";
             tsslTotalFound.Size = new Size(161, 17);
             tsslTotalFound.Text = "Всього знайдено файлів: 0";
+            // 
+            // tPreview
+            // 
+            tPreview.Interval = 300;
+            tPreview.Tick += tPreview_Tick;
             // 
             // frmMain
             // 
@@ -368,11 +438,15 @@
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
             splitContainer2.Panel1.ResumeLayout(false);
+            splitContainer2.Panel1.PerformLayout();
             splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer2).EndInit();
             splitContainer2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvSearchResults).EndInit();
             cmsMain.ResumeLayout(false);
+            tcContent.ResumeLayout(false);
+            tpAutoSummary.ResumeLayout(false);
+            tpPreview.ResumeLayout(false);
             statusStrip1.ResumeLayout(false);
             statusStrip1.PerformLayout();
             ResumeLayout(false);
@@ -388,8 +462,6 @@
         private Label label2;
         private Label label1;
         private SplitContainer splitContainer2;
-        private DataGridView dgvSearchResults;
-        private RichTextBox rtbContent;
         private ContextMenuStrip cmsMain;
         private ToolStripMenuItem tsmiCopyFileName;
         private ToolStripMenuItem tsmiCopyFilePath;
@@ -397,6 +469,12 @@
         private ToolStripMenuItem tsmiCopyRowsToClipboardCommand;
         private StatusStrip statusStrip1;
         private ToolStripStatusLabel tsslTotalFound;
+        private TabControl tcContent;
+        private TabPage tpAutoSummary;
+        private RichTextBox rtbContent;
+        private TabPage tpPreview;
+        private PreviewHandlers.PreviewHandlerHost previewHandlerHost1;
+        private DataGridView dgvSearchResults;
         private DataGridViewLinkColumn clnName;
         private DataGridViewLinkColumn clnPath;
         private DataGridViewTextBoxColumn clnType;
@@ -406,5 +484,7 @@
         private DataGridViewTextBoxColumn clnDateModified;
         private DataGridViewTextBoxColumn clnUrl;
         private DataGridViewTextBoxColumn clnContent;
+        private TextBox textBox1;
+        private System.Windows.Forms.Timer tPreview;
     }
 }

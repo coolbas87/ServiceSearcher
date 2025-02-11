@@ -144,6 +144,60 @@ namespace ServiceSearcher
 
             column.HeaderCell.SortGlyphDirection = sortOrder;
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            var text = ((TextBox)sender).Text;
+            bindingSource1.SuspendBinding();
+            if (string.IsNullOrEmpty(text))
+            {
+                bindingSource1.DataSource = searchItems;
+            }
+            else
+            {
+                bindingSource1.DataSource = searchItems.Where(x => x.Url.Contains(text)).ToList();
+            }
+            bindingSource1.ResumeBinding();
+        }
+
+        private void dgvSearchResults_RowEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            if (tcContent.SelectedTab == tpPreview)
+            {
+                tPreview.Start();
+            }
+        }
+
+        private void LoadPreview()
+        {
+            SearchItem? searchItem = dgvSearchResults.SelectedCells.Count > 0 ?
+                dgvSearchResults.SelectedCells[0].OwningRow.DataBoundItem as SearchItem : null;
+            string filePath = searchItem != null ? Path.Combine(searchItem.Path, searchItem.Name) : string.Empty;
+
+            if (File.Exists(filePath))
+            {
+                previewHandlerHost1.Open(filePath);
+            }
+        }
+
+        private void tPreview_Tick(object sender, EventArgs e)
+        {
+            LoadPreview();
+            tPreview.Stop();
+        }
+
+        private void tcContent_Selected(object sender, TabControlEventArgs e)
+        {
+            if (tcContent.SelectedTab == tpPreview)
+            {
+                LoadPreview();
+            }
+        }
     }
 
     internal abstract class DataGridCommand : ManagedCommand
