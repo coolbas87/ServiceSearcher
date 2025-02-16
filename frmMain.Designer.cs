@@ -58,7 +58,7 @@
             tsmiCopyFilePath = new ToolStripMenuItem();
             tsmiCopyFullFilePath = new ToolStripMenuItem();
             tsmiCopyRowsToClipboardCommand = new ToolStripMenuItem();
-            textBox1 = new TextBox();
+            tbSearch = new TextBox();
             tcContent = new TabControl();
             tpAutoSummary = new TabPage();
             rtbContent = new RichTextBox();
@@ -83,6 +83,10 @@
             tpPreview.SuspendLayout();
             statusStrip1.SuspendLayout();
             SuspendLayout();
+            // 
+            // bindingSource1
+            // 
+            bindingSource1.ListChanged += bindingSource1_ListChanged;
             // 
             // splitContainer1
             // 
@@ -136,7 +140,7 @@
             bFind.TabIndex = 9;
             bFind.Text = "Пошук";
             bFind.UseVisualStyleBackColor = true;
-            bFind.Click += button2_Click;
+            bFind.Click += bFind_Click;
             // 
             // tbQuery
             // 
@@ -166,7 +170,7 @@
             // splitContainer2.Panel1
             // 
             splitContainer2.Panel1.Controls.Add(dgvSearchResults);
-            splitContainer2.Panel1.Controls.Add(textBox1);
+            splitContainer2.Panel1.Controls.Add(tbSearch);
             // 
             // splitContainer2.Panel2
             // 
@@ -332,15 +336,15 @@
             tsmiCopyRowsToClipboardCommand.Size = new Size(375, 22);
             tsmiCopyRowsToClipboardCommand.Text = "Експорт виділених рядків в буфер обміну";
             // 
-            // textBox1
+            // tbSearch
             // 
-            textBox1.Dock = DockStyle.Top;
-            textBox1.Location = new Point(0, 0);
-            textBox1.Name = "textBox1";
-            textBox1.PlaceholderText = "Пошук";
-            textBox1.Size = new Size(300, 23);
-            textBox1.TabIndex = 28;
-            textBox1.TextChanged += textBox1_TextChanged;
+            tbSearch.Dock = DockStyle.Top;
+            tbSearch.Location = new Point(0, 0);
+            tbSearch.Name = "tbSearch";
+            tbSearch.PlaceholderText = "Пошук";
+            tbSearch.Size = new Size(300, 23);
+            tbSearch.TabIndex = 28;
+            tbSearch.TextChanged += tbSearch_TextChanged;
             // 
             // tcContent
             // 
@@ -484,7 +488,7 @@
         private DataGridViewTextBoxColumn clnDateModified;
         private DataGridViewTextBoxColumn clnUrl;
         private DataGridViewTextBoxColumn clnContent;
-        private TextBox textBox1;
+        private TextBox tbSearch;
         private System.Windows.Forms.Timer tPreview;
     }
 }

@@ -28,7 +28,7 @@ namespace ServiceSearcher
             commandManager.AddCommand(command);
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void bFind_Click(object sender, EventArgs e)
         {
             searchQueryItems = Regex.Matches(tbQuery.Text, "\"(.*?)\"");
             SearchItemsDAO searchItemsDAO = new SearchItemsDAO(txtFileTypes.Text, tbQuery.Text, -1);
@@ -36,9 +36,10 @@ namespace ServiceSearcher
             searchItems.AddRange(searchItemsDAO.GetAllSearchItems());
             bindingSource1.DataSource = searchItems;
             dgvSearchResults.DataSource = bindingSource1;
+            bindingSource1.ResetBindings(false);
+            tbSearch_TextChanged(tbSearch, e);
             rtbContent.DataBindings.Clear();
             rtbContent.DataBindings.Add(new Binding("Text", bindingSource1, "Content"));
-            tsslTotalFound.Text = $"Всього знайдено файлів: {searchItems.Count}";
         }
 
         private void dgvSearchResults_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -145,24 +146,26 @@ namespace ServiceSearcher
             column.HeaderCell.SortGlyphDirection = sortOrder;
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void tbSearch_TextChanged(object sender, EventArgs e)
         {
             var text = ((TextBox)sender).Text;
+
             bindingSource1.SuspendBinding();
-            if (string.IsNullOrEmpty(text))
+            try
             {
-                bindingSource1.DataSource = searchItems;
+                if (string.IsNullOrEmpty(text))
+                {
+                    bindingSource1.DataSource = searchItems;
+                }
+                else
+                {
+                    bindingSource1.DataSource = searchItems.Where(x => x.Url.Contains(text)).ToList();
+                }
             }
-            else
+            finally
             {
-                bindingSource1.DataSource = searchItems.Where(x => x.Url.Contains(text)).ToList();
+                bindingSource1.ResumeBinding();
             }
-            bindingSource1.ResumeBinding();
         }
 
         private void dgvSearchResults_RowEnter(object sender, DataGridViewCellEventArgs e)
@@ -197,6 +200,11 @@ namespace ServiceSearcher
             {
                 LoadPreview();
             }
+        }
+
+        private void bindingSource1_ListChanged(object sender, System.ComponentModel.ListChangedEventArgs e)
+        {
+            tsslTotalFound.Text = $"Всього знайдено файлів: {bindingSource1.Count}";
         }
     }
 
