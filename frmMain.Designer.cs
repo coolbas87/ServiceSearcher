@@ -44,6 +44,7 @@
             txtFileTypes = new TextBox();
             splitContainer2 = new SplitContainer();
             dgvSearchResults = new DataGridView();
+            clnCheck = new DataGridViewCheckBoxColumn();
             clnName = new DataGridViewLinkColumn();
             clnPath = new DataGridViewLinkColumn();
             clnType = new DataGridViewTextBoxColumn();
@@ -58,6 +59,7 @@
             tsmiCopyFilePath = new ToolStripMenuItem();
             tsmiCopyFullFilePath = new ToolStripMenuItem();
             tsmiCopyRowsToClipboardCommand = new ToolStripMenuItem();
+            tsmiCopyCheckedRowsToClipboard = new ToolStripMenuItem();
             tbSearch = new TextBox();
             tcContent = new TabControl();
             tpAutoSummary = new TabPage();
@@ -197,11 +199,10 @@
             dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
             dgvSearchResults.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dgvSearchResults.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            dgvSearchResults.Columns.AddRange(new DataGridViewColumn[] { clnName, clnPath, clnType, clnSize, clnHits, clnDateCreated, clnDateModified, clnUrl, clnContent });
+            dgvSearchResults.Columns.AddRange(new DataGridViewColumn[] { clnCheck, clnName, clnPath, clnType, clnSize, clnHits, clnDateCreated, clnDateModified, clnUrl, clnContent });
             dgvSearchResults.ContextMenuStrip = cmsMain;
             dgvSearchResults.Location = new Point(0, 27);
             dgvSearchResults.Name = "dgvSearchResults";
-            dgvSearchResults.ReadOnly = true;
             dgvSearchResults.RowHeadersWidth = 25;
             dgvSearchResults.RowTemplate.Height = 18;
             dgvSearchResults.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -211,9 +212,17 @@
             dgvSearchResults.ColumnHeaderMouseClick += dgvSearchResults_ColumnHeaderMouseClick;
             dgvSearchResults.RowEnter += dgvSearchResults_RowEnter;
             // 
+            // clnCheck
+            // 
+            clnCheck.DataPropertyName = "IsChecked";
+            clnCheck.Frozen = true;
+            clnCheck.HeaderText = "Відмітка";
+            clnCheck.Name = "clnCheck";
+            // 
             // clnName
             // 
             clnName.DataPropertyName = "Name";
+            clnName.Frozen = true;
             clnName.HeaderText = "Ім'я файла";
             clnName.Name = "clnName";
             clnName.ReadOnly = true;
@@ -302,9 +311,9 @@
             // 
             // cmsMain
             // 
-            cmsMain.Items.AddRange(new ToolStripItem[] { tsmiCopyFileName, tsmiCopyFilePath, tsmiCopyFullFilePath, tsmiCopyRowsToClipboardCommand });
+            cmsMain.Items.AddRange(new ToolStripItem[] { tsmiCopyFileName, tsmiCopyFilePath, tsmiCopyFullFilePath, tsmiCopyRowsToClipboardCommand, tsmiCopyCheckedRowsToClipboard });
             cmsMain.Name = "cmsMain";
-            cmsMain.Size = new Size(376, 92);
+            cmsMain.Size = new Size(376, 136);
             cmsMain.Opening += cmsMain_Opening;
             // 
             // tsmiCopyFileName
@@ -335,6 +344,12 @@
             tsmiCopyRowsToClipboardCommand.ShortcutKeys = Keys.Control | Keys.Shift | Keys.C;
             tsmiCopyRowsToClipboardCommand.Size = new Size(375, 22);
             tsmiCopyRowsToClipboardCommand.Text = "Експорт виділених рядків в буфер обміну";
+            // 
+            // tsmiCopyCheckedRowsToClipboard
+            // 
+            tsmiCopyCheckedRowsToClipboard.Name = "tsmiCopyCheckedRowsToClipboard";
+            tsmiCopyCheckedRowsToClipboard.Size = new Size(375, 22);
+            tsmiCopyCheckedRowsToClipboard.Text = "Експорт відмічених рядків в буфер обміну";
             // 
             // tbSearch
             // 
@@ -479,6 +494,10 @@
         private TabPage tpPreview;
         private PreviewHandlers.PreviewHandlerHost previewHandlerHost1;
         private DataGridView dgvSearchResults;
+        private TextBox tbSearch;
+        private System.Windows.Forms.Timer tPreview;
+        private ToolStripMenuItem tsmiCopyCheckedRowsToClipboard;
+        private DataGridViewCheckBoxColumn clnCheck;
         private DataGridViewLinkColumn clnName;
         private DataGridViewLinkColumn clnPath;
         private DataGridViewTextBoxColumn clnType;
@@ -488,7 +507,5 @@
         private DataGridViewTextBoxColumn clnDateModified;
         private DataGridViewTextBoxColumn clnUrl;
         private DataGridViewTextBoxColumn clnContent;
-        private TextBox tbSearch;
-        private System.Windows.Forms.Timer tPreview;
     }
 }

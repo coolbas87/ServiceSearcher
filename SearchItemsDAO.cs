@@ -75,7 +75,7 @@ namespace ServiceSearcher
                                     Path = reader.GetString(1),
                                     Type = reader.GetString(2),
                                     Size = (ulong)reader.GetDecimal(3),
-                                    Content = reader.GetString(4),
+                                    Content = reader.GetValue(4) is DBNull ? "Помилка читання вмісту файла" : reader.GetString(4),
                                     Hits = reader.GetInt32(5),
                                     DateCreated = reader.GetDateTime(6),
                                     DateModified = reader.GetDateTime(7),
