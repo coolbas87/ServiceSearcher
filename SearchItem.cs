@@ -2,7 +2,8 @@
 {
     internal class SearchItem
     {
-        public string Name {  get; set; } = string.Empty;
+        public bool IsChecked { get; set; }
+        public string Name { get; set; } = string.Empty;
         public string Path { get; set; } = string.Empty;
         public string Type { get; set; } = string.Empty;
         public ulong Size { get; set; }

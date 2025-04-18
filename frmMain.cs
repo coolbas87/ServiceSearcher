@@ -26,20 +26,31 @@ namespace ServiceSearcher
             command = new CopyRowsToClipboardCommand(dgvSearchResults);
             tsmiCopyRowsToClipboardCommand.Command = command;
             commandManager.AddCommand(command);
+            command = new CopyCheckedRowsToClipboardCommand(dgvSearchResults, searchItems);
+            tsmiCopyCheckedRowsToClipboard.Command = command;
+            commandManager.AddCommand(command);
         }
 
         private void bFind_Click(object sender, EventArgs e)
         {
-            searchQueryItems = Regex.Matches(tbQuery.Text, "\"(.*?)\"");
-            SearchItemsDAO searchItemsDAO = new SearchItemsDAO(txtFileTypes.Text, tbQuery.Text, -1);
-            searchItems.Clear();
-            searchItems.AddRange(searchItemsDAO.GetAllSearchItems());
-            bindingSource1.DataSource = searchItems;
-            dgvSearchResults.DataSource = bindingSource1;
-            bindingSource1.ResetBindings(false);
-            tbSearch_TextChanged(tbSearch, e);
-            rtbContent.DataBindings.Clear();
-            rtbContent.DataBindings.Add(new Binding("Text", bindingSource1, "Content"));
+            try
+            {
+                bFind.Enabled = false;
+                searchQueryItems = Regex.Matches(tbQuery.Text, "\"(.*?)\"");
+                SearchItemsDAO searchItemsDAO = new SearchItemsDAO(txtFileTypes.Text, tbQuery.Text, -1);
+                searchItems.Clear();
+                searchItems.AddRange(searchItemsDAO.GetAllSearchItems());
+                bindingSource1.DataSource = searchItems;
+                dgvSearchResults.DataSource = bindingSource1;
+                bindingSource1.ResetBindings(false);
+                tbSearch_TextChanged(tbSearch, e);
+                rtbContent.DataBindings.Clear();
+                rtbContent.DataBindings.Add(new Binding("Text", bindingSource1, "Content"));
+            }
+            finally
+            {
+                bFind.Enabled = true;
+            }
         }
 
         private void dgvSearchResults_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -289,13 +300,48 @@ namespace ServiceSearcher
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine($"{dataGridView.Columns["clnName"].HeaderText}\t{dataGridView.Columns["clnPath"].HeaderText}\t" +
                 $"{dataGridView.Columns["clnType"].HeaderText}\t{dataGridView.Columns["clnSize"].HeaderText}\t{dataGridView.Columns["clnDateCreated"].HeaderText}\t" +
-                $"{dataGridView.Columns["clnDateModified"].HeaderText}\t{dataGridView.Columns["clnContent"].HeaderText}\t");
+                $"{dataGridView.Columns["clnDateModified"].HeaderText}");
 
             foreach (DataGridViewRow row in rows) 
             {
                 SearchItem searchItem = ((SearchItem)row.DataBoundItem);
                 stringBuilder.AppendLine($"{searchItem.Name}\t{searchItem.Path}\t{searchItem.Type}\t{searchItem.Size}\t" +
-                    $"{searchItem.DateCreated}\t{searchItem.DateModified}\t{searchItem.Content}");
+                    $"{searchItem.DateCreated}\t{searchItem.DateModified}");
+            }
+
+            if (stringBuilder.Length > 0)
+            {
+                Clipboard.SetText(stringBuilder.ToString());
+            }
+        }
+    }
+
+    internal class CopyCheckedRowsToClipboardCommand : DataGridCommand
+    {
+        SearchItemsList searchItems = new SearchItemsList();
+
+        public CopyCheckedRowsToClipboardCommand(DataGridView dataGridView, SearchItemsList searchItems) : base(dataGridView) 
+        {
+            this.searchItems = searchItems;
+        }
+
+        public override bool CanExecute(object? parameter)
+        {
+            return base.CanExecute(parameter) && dataGridView.SelectedRows.Count > 0;
+        }
+
+        public override void Execute(object? parameter)
+        {
+            DataGridViewSelectedRowCollection rows = dataGridView.SelectedRows;
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine($"{dataGridView.Columns["clnName"].HeaderText}\t{dataGridView.Columns["clnPath"].HeaderText}\t" +
+                $"{dataGridView.Columns["clnType"].HeaderText}\t{dataGridView.Columns["clnSize"].HeaderText}\t{dataGridView.Columns["clnDateCreated"].HeaderText}\t" +
+                $"{dataGridView.Columns["clnDateModified"].HeaderText}");
+
+            foreach (SearchItem searchItem in searchItems.Where(x => x.IsChecked))
+            {
+                stringBuilder.AppendLine($"{searchItem.Name}\t{searchItem.Path}\t{searchItem.Type}\t{searchItem.Size}\t" +
+                    $"{searchItem.DateCreated}\t{searchItem.DateModified}");
             }
 
             if (stringBuilder.Length > 0)
